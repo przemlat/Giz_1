@@ -26,11 +26,9 @@ public class Huffman {
         }
 
         HashMap<String, Double> map = findFrequency(text);
-
         getKeyOfMinValue(map);
 
         int mapSize = map.size();
-
         for (int i = 0; i <= mapSize - 2; i++) {
             String key1 = getKeyOfMinValue(map);
             Double value1 = map.get(key1);
@@ -38,6 +36,7 @@ public class Huffman {
             if (graph.getNode(String.valueOf(key1)) == null) {
                 graph.addNode(String.valueOf(key1));
             }
+
             map.remove(key1);
             String key2 = getKeyOfMinValue(map);
             Double value2 = map.get(key2);
@@ -52,6 +51,7 @@ public class Huffman {
             if (graph.getNode(String.valueOf(key1 + key2)) == null) {
                 graph.addNode(String.valueOf(key1 + key2));
             }
+
             String nameOfEdge1 = String.valueOf(key1) + String.valueOf(key1 + key2);
             String nameOfEdge2 = String.valueOf(key2) + String.valueOf(key1 + key2);
             graph.addEdge(nameOfEdge1, String.valueOf(key1), String.valueOf(key1 + key2));
