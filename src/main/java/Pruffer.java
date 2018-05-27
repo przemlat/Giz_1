@@ -1,6 +1,4 @@
-import org.graphstream.graph.EdgeRejectedException;
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.IdAlreadyInUseException;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 
@@ -11,7 +9,7 @@ import java.util.ArrayList;
 
 public class Pruffer {
     public static void main(String[] args) throws IOException {
-        Graph graph = new SingleGraph("Pruffer graph");
+        Graph graph = new SingleGraph("Pruffer");
 
         FileReader fileReader = new FileReader("pruffer.txt");
         BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -29,37 +27,36 @@ public class Pruffer {
             line = bufferedReader.readLine();
         }
 
-        String[] numbersFromFile = text.split("\\s+");
-
-        Node A[] = new Node[numbersFromFile.length + 3];
-
-        for (int i = 0; i < numbersFromFile.length + 3; i++) {
-            A[i] = graph.addNode(String.valueOf(i));
-        }
+        String[] nodeNumbersFromFile = text.split("\\s+");
 
         ArrayList<Integer> numbers = new ArrayList<Integer>();
-        ArrayList<Integer> prufferArr = new ArrayList<Integer>();
-
-        for (int i = 1; i < numbersFromFile.length + 3; i++) {
+        for (int i = 1; i < nodeNumbersFromFile.length + 3; i++) {
             numbers.add(i);
         }
 
-        for (int i = 0; i < numbersFromFile.length; i++) {
-            prufferArr.add(Integer.parseInt(numbersFromFile[i]));
+        ArrayList<Integer> nodeNumbers = new ArrayList<Integer>();
+        for (String aNodeNumbersFromFile : nodeNumbersFromFile) {
+            nodeNumbers.add(Integer.parseInt(aNodeNumbersFromFile));
         }
 
         try {
             for (int j = 0; j < numbers.size(); j++) {
-                if (numbers.get(j) != prufferArr.get(0)) {
-                    for (int k = 0; k < prufferArr.size(); k++) {
-                        if (prufferArr.get(k) == numbers.get(j)) {
-                            k = prufferArr.size();
-                        } else if (prufferArr.get(k) != numbers.get(0) && k == (prufferArr.size() - 1)) {
-                            String nameOfEdge = String.valueOf(prufferArr.get(0)) + String.valueOf(numbers.get(j));
-                            graph.addEdge(nameOfEdge, prufferArr.get(0), numbers.get(j));
-                            k = prufferArr.size();
+                if (numbers.get(j) != nodeNumbers.get(0)) {
+                    for (int k = 0; k < nodeNumbers.size(); k++) {
+                        if (nodeNumbers.get(k) == numbers.get(j)) {
+                            k = nodeNumbers.size();
+                        } else if (nodeNumbers.get(k) != numbers.get(0) && k == (nodeNumbers.size() - 1)) {
+                            String nameOfEdge = String.valueOf(nodeNumbers.get(0)) + String.valueOf(numbers.get(j));
+                            if (graph.getNode(String.valueOf(nodeNumbers.get(0))) == null) {
+                                graph.addNode(String.valueOf(nodeNumbers.get(0)));
+                            }
+                            if (graph.getNode(String.valueOf(numbers.get(j))) == null) {
+                                graph.addNode(String.valueOf(numbers.get(j)));
+                            }
+                            graph.addEdge(nameOfEdge, String.valueOf(nodeNumbers.get(0)), String.valueOf(numbers.get(j)));
+                            k = nodeNumbers.size();
                             numbers.remove(j);
-                            prufferArr.remove(0);
+                            nodeNumbers.remove(0);
                             j = -1;
 
                         }
@@ -67,20 +64,21 @@ public class Pruffer {
                 }
             }
         } catch (IndexOutOfBoundsException e) {
+            if (graph.getNode(String.valueOf(numbers.get(numbers.size() - 2))) == null) {
+                graph.addNode(String.valueOf(numbers.get(numbers.size() - 2)));
+            }
+            if (graph.getNode(String.valueOf(numbers.get(numbers.size() - 1))) == null) {
+                graph.addNode(String.valueOf(numbers.get(numbers.size() - 1)));
+            }
             String nameOfEdge = String.valueOf(numbers.get(numbers.size() - 2) + String.valueOf(numbers.get(numbers.size() - 1)));
-            graph.addEdge(nameOfEdge, numbers.get(numbers.size() - 2), numbers.get(numbers.size() - 1));
-
-        } catch (IdAlreadyInUseException e) {
-            e.printStackTrace();
-        } catch (EdgeRejectedException e) {
+            graph.addEdge(nameOfEdge, String.valueOf(numbers.get(numbers.size() - 2)), String.valueOf(numbers.get(numbers.size() - 1)));
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         for (Node node : graph) {
             node.addAttribute("ui.label", node.getId());
         }
-
-        graph.removeNode(A[0]);
         graph.display();
     }
 }
