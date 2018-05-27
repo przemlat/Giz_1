@@ -9,9 +9,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Main {
+public class Pruffer {
     public static void main(String[] args) throws IOException {
-        Graph graph = new SingleGraph("Prufer graph");
+        Graph graph = new SingleGraph("Pruffer graph");
 
         FileReader fileReader = new FileReader("pruffer.txt");
         BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -38,28 +38,28 @@ public class Main {
         }
 
         ArrayList<Integer> numbers = new ArrayList<Integer>();
-        ArrayList<Integer> pruferArr = new ArrayList<Integer>();
+        ArrayList<Integer> prufferArr = new ArrayList<Integer>();
 
         for (int i = 1; i < numbersFromFile.length + 3; i++) {
             numbers.add(i);
         }
 
         for (int i = 0; i < numbersFromFile.length; i++) {
-            pruferArr.add(Integer.parseInt(numbersFromFile[i]));
+            prufferArr.add(Integer.parseInt(numbersFromFile[i]));
         }
 
         try {
             for (int j = 0; j < numbers.size(); j++) {
-                if (numbers.get(j) != pruferArr.get(0)) {
-                    for (int k = 0; k < pruferArr.size(); k++) {
-                        if (pruferArr.get(k) == numbers.get(j)) {
-                            k = pruferArr.size();
-                        } else if (pruferArr.get(k) != numbers.get(0) && k == (pruferArr.size() - 1)) {
-                            String nameOfEdge = String.valueOf(pruferArr.get(0)) + String.valueOf(numbers.get(j));
-                            graph.addEdge(nameOfEdge, pruferArr.get(0), numbers.get(j));
-                            k = pruferArr.size();
+                if (numbers.get(j) != prufferArr.get(0)) {
+                    for (int k = 0; k < prufferArr.size(); k++) {
+                        if (prufferArr.get(k) == numbers.get(j)) {
+                            k = prufferArr.size();
+                        } else if (prufferArr.get(k) != numbers.get(0) && k == (prufferArr.size() - 1)) {
+                            String nameOfEdge = String.valueOf(prufferArr.get(0)) + String.valueOf(numbers.get(j));
+                            graph.addEdge(nameOfEdge, prufferArr.get(0), numbers.get(j));
+                            k = prufferArr.size();
                             numbers.remove(j);
-                            pruferArr.remove(0);
+                            prufferArr.remove(0);
                             j = -1;
 
                         }
@@ -80,6 +80,7 @@ public class Main {
             node.addAttribute("ui.label", node.getId());
         }
 
+        graph.removeNode(A[0]);
         graph.display();
     }
 }
