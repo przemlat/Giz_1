@@ -76,23 +76,22 @@ public class Huffman {
     }
 
     private static HashMap<String, Double> findFrequency(String s) {
-        HashMap<String, Double> map = new HashMap<String, Double>();
+        HashMap<String, Double> leavesMap = new HashMap<String, Double>();
         for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            Double val = map.get(c);
+            char charAt = s.charAt(i);
+            Double val = leavesMap.get(charAt);
             if (val != null) {
-                map.put(String.valueOf(c), val + 1);
+                leavesMap.put(String.valueOf(charAt), val + 1);
             } else {
-                map.put(String.valueOf(c), 1.0);
+                leavesMap.put(String.valueOf(charAt), 1.0);
             }
         }
-
-        Iterator<Map.Entry<String, Double>> iterator = map.entrySet().iterator();
+        Iterator<Map.Entry<String, Double>> iterator = leavesMap.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, Double> pair = iterator.next();
             Double newCount = (pair.getValue() == null) ? 0 : pair.getValue() / s.length();
             pair.setValue(newCount);
         }
-        return map;
+        return leavesMap;
     }
 }
